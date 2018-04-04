@@ -71,37 +71,49 @@ def dijsktra(g, s):
     vertices = Vertices()
     for key in g.ve.keys():
         vertices.add(key)
-
     vertices.update_dist(s, 0)
 
     while not vertices.empty():
         v = vertices.get_min()
         vertices.remove(v[0])
         visited.append(v)
-
         for neighbor in g.get_neighbors(v[0]):
             if vertices.contains(neighbor[0]):
                 total_dist = v[1]['dist'] + g.get_dist(v[0], neighbor[0])
                 if total_dist < vertices.get(neighbor[0])['dist']:
                     vertices.table[neighbor[0]]['dist'] = total_dist
                     vertices.table[neighbor[0]]['prev'] = v[0]
-    
     return visited
+
+def backtrack(data):
+    target = data[-1][0]
+    prev = data[-1][1]['prev']
+    data = {each[0]:each[1]['prev'] for each in data}
+    results = []
+    results.append(target)
+    while prev:
+        results.append(prev)
+        prev = data[prev]
+    results.reverse()
+    return results
+
+
 
 def main(fname):
     g = build_graph(fname)
     print(g)
     result = dijsktra(g, '1')
     print(result)
+    print("Furthest vertex:", result[-1][0])
+    path = backtrack(result)
+    print("Path:", path)
+    print("Maximum Distance:", len(path))
+
+    with open("output.txt", "w") as f:
+        f.write("Furthest vertex: %s" % result[-1][0])
+        f.write("\nPath: %s" % path)
+        f.write("\nMaximum Distance: %s" % len(path))
 
 if __name__ == '__main__':
     main(sys.argv[1])
-
-
-
-
-
-
-
-
 

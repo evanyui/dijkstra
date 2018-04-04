@@ -4,3 +4,5 @@ edges
 
 To run:
 py dijkstra.py dijkstra-data.txt
+
+Results will be printed and also will be output into output.txt
